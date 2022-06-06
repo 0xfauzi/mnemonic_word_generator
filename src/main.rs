@@ -3,13 +3,19 @@ use crypto::sha2::Sha256;
 use rand::{Rng, thread_rng};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::num::NonZeroU32;
 use std::ops::BitAnd;
 use std::path::Path;
+use ring::{digest, pbkdf2};
+
+
+const SEED_LENGTH: usize = digest::SHA512_OUTPUT_LEN;
+pub type Seed = [u8; SEED_LENGTH];
 
 fn main() {
 
-    //Currently, all bip38 words are read from a local file
-    let bip38_words = lines_from_file("src/english.txt");
+    //Currently, all bip39 words are read from a local file
+    let bip39_words = lines_from_file("src/english.txt");
 
     let private_key = create_random_sequence();
 
@@ -20,8 +26,20 @@ fn main() {
         print!("{:#010b}", checksum_applied_to_private_key[i]);
     }
 
-    let words = map_mnemonic_words(&checksum_applied_to_private_key, &bip38_words);
+    let words = map_mnemonic_words(&checksum_applied_to_private_key, &bip39_words);
     println!("{:?}", words);
+
+    println!("Generating 512-bit seed from mnemonic and salt");
+    let mut words_as_string: String = String::new();
+    for i in 0..words.len() - 1 {
+        words_as_string.push_str(words.get(i).unwrap());
+        words_as_string.push_str(" ");
+    }
+    words_as_string.push_str(words.get(words.len() - 1).unwrap());
+    println!("{:?}", words_as_string);
+    let seed = generate_seed_from_mnemonic(&words_as_string, "example");
+    println!("Printing generated seed");
+    println!("{:?}", seed);
 }
 
 fn create_random_sequence() -> [u8; 32] {
@@ -99,4 +117,13 @@ fn lines_from_file(filename: impl AsRef<Path>) -> Vec<String> {
     buf.lines()
         .map(|l| l.expect("Could not parse line"))
         .collect()
+}
+
+fn generate_seed_from_mnemonic(mnemonic: &String, passphrase: &str) -> [u8; 64] {
+
+    let salt = ("mnemonic".to_owned() + passphrase);
+
+    let mut seed: Seed = [0u8; SEED_LENGTH];
+    pbkdf2::derive(pbkdf2::PBKDF2_HMAC_SHA512, NonZeroU32::new(2048).unwrap(), &salt.as_bytes(), mnemonic.as_bytes(), &mut seed);
+    seed
 }
