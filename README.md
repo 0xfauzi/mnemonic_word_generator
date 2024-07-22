@@ -10,25 +10,6 @@ This Rust project implements a simple Bitcoin mnemonic phrase generator. It crea
 - Implements proper error handling
 - Simple and easy to understand codebase
 
-## Dependencies
-
-This project uses the following external crates:
-
-- `rand`: For generating cryptographically secure random numbers
-- `rust-crypto`: For cryptographic functions
-- `itertools`: For additional iterator functionality
-- `ring`: For cryptographic operations
-
-These dependencies are specified in the `Cargo.toml` file:
-
-```toml
-[dependencies]
-rand = "0.8.4"
-rust-crypto = "0.2.36"
-itertools = "0.10.3"
-ring = "0.16.20"
-```
-
 ## Usage
 
 To use this mnemonic phrase generator, you can call the `generate_mnemonic()` function. Here's an example of how to use it in your main function:
