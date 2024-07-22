@@ -1,6 +1,4 @@
 [![Rust](https://github.com/0xfauzi/mnemonic_word_generator/actions/workflows/rust.yml/badge.svg?branch=master)](https://github.com/0xfauzi/mnemonic_word_generator/actions/workflows/rust.yml)
-
-Generates a mnemonic phrase according to BIP 39
 # Bitcoin Mnemonic Phrase Generator
 
 This Rust project implements a simple Bitcoin mnemonic phrase generator. It creates a random 12-word mnemonic phrase using the BIP39 wordlist, which can be used as a seed for generating Bitcoin wallets.
