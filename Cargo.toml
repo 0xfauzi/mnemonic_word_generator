@@ -3,10 +3,7 @@ name = "mnemonic_word_generator"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-rand = "0.8.4"
-rust-crypto = "0.2.36"
-itertools = "0.10.3"
-ring = "0.16.20"
+rand = "0.8.5"
+sha2 = "0.10.6"
+itertools = "0.10.5"
